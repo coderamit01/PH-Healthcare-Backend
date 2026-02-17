@@ -9,8 +9,6 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(express.json());
 
-app.all("/api/auth/*", toNodeHandler(auth));
-
 app.use("/api/v1", IndexRoutes);
 
 //Server start

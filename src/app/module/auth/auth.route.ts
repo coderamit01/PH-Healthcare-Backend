@@ -3,6 +3,6 @@ import { AuthController } from "./auth.controller";
 
 const router = Router();
 
-router.post("/register", AuthController.userRegister);
+router.post("/register", AuthController.registerpatient);
 
 export const AuthRoutes = router;

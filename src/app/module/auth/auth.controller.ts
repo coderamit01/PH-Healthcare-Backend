@@ -3,18 +3,18 @@ import { catchAsync } from "../../shared/catchAsync";
 import { AuthService } from "./auth.service";
 import { sendResponse } from "../../shared/sendResponse";
 
-const userRegister = catchAsync(async (req: Request, res: Response) => {
+const registerpatient = catchAsync(async (req: Request, res: Response) => {
   const payload = req.body;
-  const result = await AuthService.userRegister(payload);
+  const result = await AuthService.registerpatient(payload);
 
   sendResponse(res, {
     statusCode: 201,
     success: true,
-    message: "User Created Successfully",
+    message: "Patient Created Successfully",
     data: result,
   });
 });
 
 export const AuthController = {
-  userRegister,
+  registerpatient,
 };
