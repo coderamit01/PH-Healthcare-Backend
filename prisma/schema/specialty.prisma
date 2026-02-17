@@ -1,15 +1,7 @@
-generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
-}
-
-datasource db {
-  provider = "postgresql"
-}
 
 model Specialty {;
   id          String    @id @default(uuid(7))
-  title      String    @db.VarChar(100)
+  title       String    @db.VarChar(100)
   description String?   @db.Text
   icon        String?   @db.VarChar(255)
   createdAt   DateTime  @default(now())
