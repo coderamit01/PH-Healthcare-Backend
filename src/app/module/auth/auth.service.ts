@@ -1,3 +1,4 @@
+import { UserStatus } from "../../../generated/prisma/enums";
 import { auth } from "../../lib/auth";
 
 interface IRegisterPatientPayload {
@@ -20,7 +21,25 @@ const registerpatient = async (payload: IRegisterPatientPayload) => {
   }
   return data;
 };
+const loginUser = async (payload: IRegisterPatientPayload) => {
+  const { email, password } = payload;
+  const data = await auth.api.signInEmail({
+    body: {
+      email,
+      password,
+    },
+  });
+
+  if (data.user.status === UserStatus.BLOCKED) {
+    throw new Error("User is blocked");
+  }
+
+  if (data.user.isDeleted || data.user.status === UserStatus.BLOCKED) {
+    throw new Error("User is deleted");
+  }
+  return data;
+};
 
 export const AuthService = {
-  registerpatient,
+  registerpatient, loginUser
 };

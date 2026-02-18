@@ -1,7 +1,6 @@
 import express, { Application, Request, Response } from "express";
 import { IndexRoutes } from "./app/routes";
-import { toNodeHandler } from "better-auth/node";
-import { auth } from "./app/lib/auth";
+import { notFound } from "./app/middleware/notFound";
 
 const app: Application = express();
 
@@ -15,5 +14,7 @@ app.use("/api/v1", IndexRoutes);
 app.get("/", (req: Request, res: Response) => {
   res.send("Wooo Server is running!");
 });
+
+app.use(notFound);
 
 export default app;
