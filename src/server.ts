@@ -1,12 +1,11 @@
 import "dotenv/config";
 import app from "./app";
-
-const Port = process.env.PORT;
+import { envVars } from "./app/config/env";
 
 const main = () => {
   try {
-    app.listen(Port, () => {
-      console.log(`Server is running on http://localhost:${Port}`);
+    app.listen(envVars.PORT, () => {
+      console.log(`Server is running on http://localhost:${envVars.PORT}`);
     });
   } catch (error) {
     console.log("Something went wrong!",error);
