@@ -74,3 +74,8 @@ export type Patient = Prisma.PatientModel
  * 
  */
 export type Specialty = Prisma.SpecialtyModel
+/**
+ * Model DoctorSpecialty
+ * 
+ */
+export type DoctorSpecialty = Prisma.DoctorSpecialtyModel

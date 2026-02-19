@@ -1,5 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { UserStatus } from "../../../generated/prisma/enums";
+import { AppError } from "../../errorhelpers/AppError";
 import { auth } from "../../lib/auth";
+import { prisma } from "../../lib/prisma";
 
 interface IRegisterPatientPayload {
   name: string;
@@ -16,11 +19,38 @@ const registerpatient = async (payload: IRegisterPatientPayload) => {
       password,
     },
   });
+
   if (!data.user) {
-    throw new Error("Failed to register patient");
+    throw new AppError(400, "Failed to register patient");
   }
-  return data;
+
+  try {
+    const patient = await prisma.$transaction(async (tx) => {
+      const patientTx = await tx.patient.create({
+        data: {
+          userId: data.user.id,
+          name,
+          email,
+        }
+      })
+      return patientTx;
+    })
+
+    return {
+      ...data,
+      patient
+    }
+  } catch (error: any) {
+    await prisma.user.delete({
+      where: {
+        id: data.user.id,
+      }
+    })
+
+    throw new AppError(500, error.message || "Failed to create patient profile");
+  }
 };
+
 const loginUser = async (payload: IRegisterPatientPayload) => {
   const { email, password } = payload;
   const data = await auth.api.signInEmail({

@@ -1,0 +1,17 @@
+-- CreateTable
+CREATE TABLE "doctor_specialties" (
+    "id" TEXT NOT NULL,
+    "doctorId" TEXT NOT NULL,
+    "specialtyId" TEXT NOT NULL,
+
+    CONSTRAINT "doctor_specialties_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "doctor_specialties_doctorId_specialtyId_key" ON "doctor_specialties"("doctorId", "specialtyId");
+
+-- AddForeignKey
+ALTER TABLE "doctor_specialties" ADD CONSTRAINT "doctor_specialties_specialtyId_fkey" FOREIGN KEY ("specialtyId") REFERENCES "specialties"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "doctor_specialties" ADD CONSTRAINT "doctor_specialties_doctorId_fkey" FOREIGN KEY ("doctorId") REFERENCES "doctor"("id") ON DELETE CASCADE ON UPDATE CASCADE;
