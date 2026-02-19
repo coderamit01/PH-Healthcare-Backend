@@ -15,7 +15,7 @@ const registerpatient = catchAsync(async (req: Request, res: Response) => {
   });
 });
 const loginUser = catchAsync(async (req: Request, res: Response) => {
-const payload = req.body;
+  const payload = req.body;
   const result = await AuthService.loginUser(payload);
 
   sendResponse(res, {
@@ -27,5 +27,6 @@ const payload = req.body;
 });
 
 export const AuthController = {
-  registerpatient,loginUser
+  registerpatient,
+  loginUser,
 };
