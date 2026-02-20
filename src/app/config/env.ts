@@ -8,6 +8,9 @@ interface EnvConfig {
   BETTER_AUTH_SECRET: string
   BETTER_AUTH_URL: string
   NODE_ENV: string
+  ACCESS_TOKEN_SECRET: string
+  ACCESS_TOKEN_EXPIRES_IN: string
+  REFRESH_TOKEN_EXPIRES_IN: string
 }
 
 const envVariables = (): EnvConfig => {
@@ -16,7 +19,10 @@ const envVariables = (): EnvConfig => {
     'DATABASE_URL',
     'BETTER_AUTH_SECRET',
     'BETTER_AUTH_URL',
-    'NODE_ENV'
+    'NODE_ENV',
+    'ACCESS_TOKEN_SECRET',
+    'ACCESS_TOKEN_EXPIRES_IN',
+    'REFRESH_TOKEN_EXPIRES_IN'
   ]
 
   requiredEnvVariales.forEach( (variable) => {
@@ -31,6 +37,9 @@ const envVariables = (): EnvConfig => {
     BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET as string,
     BETTER_AUTH_URL: process.env.BETTER_AUTH_URL as string,
     NODE_ENV: process.env.NODE_ENV as string,
+    ACCESS_TOKEN_SECRET: process.env.ACCESS_TOKEN_SECRET as string,
+    ACCESS_TOKEN_EXPIRES_IN: process.env.ACCESS_TOKEN_EXPIRES_IN as string,
+    REFRESH_TOKEN_EXPIRES_IN: process.env.REFRESH_TOKEN_EXPIRES_IN as string
     
   }
 }
