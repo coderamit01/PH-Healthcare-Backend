@@ -1,8 +1,12 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 
-export const notFound = (req:Request,res:Response) => {
-  res.status(404).json({
+export const notFound = (req:Request,res:Response,next:NextFunction) => {
+  return res.status(404).json({
     success: false,
-    message: `Route ${req.originalUrl} Not Found`
+    message: `Route ${req.originalUrl} Not Found`,
+    error: {
+      path: req.originalUrl,
+      message: "Your requested path is not found!"
+    }
   })
 }
