@@ -48,6 +48,8 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+
+
 export const AuthController = {
   registerpatient,
   loginUser,

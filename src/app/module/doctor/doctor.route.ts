@@ -5,10 +5,9 @@ import { Role } from "../../../generated/prisma/enums";
 
 const router = Router();
 
-router.get("/", authCheck(Role.ADMIN), DoctorController.getAllDoctors);
-// router.get("/:id", DoctorController.getDoctorById);
-// router.put("/:id", DoctorController.updateDoctor);
-//router.patch("/:id", DoctorController.updateDoctor);
-// router.delete("/:id", DoctorController.deleteDoctor);
+router.get("/", authCheck(Role.ADMIN,Role.PATIENT), DoctorController.getAllDoctors);
+router.get("/:id", DoctorController.getDoctorById);
+router.put("/:id", DoctorController.updateDoctor);
+router.delete("/:id", DoctorController.deleteDoctor);
 
 export const DoctorRoutes = router;
