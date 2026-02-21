@@ -10,83 +10,92 @@ import { envVars } from "../config/env";
 
 export const authCheck = (...authRoles: Role[]) => async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const sessionToken = cookieUtils.getCookie(req, 'accessToken');
-    if (!sessionToken) {
-      throw new AppError(401, "Unauthorized: No session token provided");
-    }
-    if (sessionToken) {
-      const sessionExists = await prisma.session.findFirst({
-        where: {
-          token: sessionToken,
-          expiresAt: {
-            gt: new Date()
-          }
-        },
-        include: {
-          user: true
-        }
-      })
+        //Session Token Verification
+        const sessionToken = cookieUtils.getCookie(req, "better-auth.session_token");
 
-      if (sessionExists && sessionExists.user) {
-        const user = sessionExists.user;
-
-        const now = new Date();
-        const expiresAt = new Date(sessionExists.expiresAt)
-        const createdAt = new Date(sessionExists.createdAt)
-
-        const sessionLifeTime = expiresAt.getTime() - createdAt.getTime();
-        const timeRemaining = expiresAt.getTime() - now.getTime();
-        const percentRemaining = (timeRemaining / sessionLifeTime) * 100;
-
-        if (percentRemaining < 20) {
-          res.setHeader('X-Session-Refresh', 'true');
-          res.setHeader('X-Session-Expires-At', expiresAt.toISOString());
-          res.setHeader('X-Time-Remaining', timeRemaining.toString());
-
-          console.log("Session Expiring Soon!!");
+        if (!sessionToken) {
+            throw new Error('Unauthorized access! No session token provided.');
         }
 
-        if (user.status === UserStatus.BLOCKED && user.status === UserStatus.BLOCKED) {
-          throw new AppError(403, "Forbidden: Your account is blocked. Please contact support for assistance.");
+        if (sessionToken) {
+            const sessionExists = await prisma.session.findFirst({
+                where: {
+                    token: sessionToken,
+                    expiresAt: {
+                        gt: new Date(),
+                    }
+                },
+                include: {
+                    user: true,
+                }
+            })
+
+            if (sessionExists && sessionExists.user) {
+                const user = sessionExists.user;
+
+                const now = new Date();
+                const expiresAt = new Date(sessionExists.expiresAt)
+                const createdAt = new Date(sessionExists.createdAt)
+
+                const sessionLifeTime = expiresAt.getTime() - createdAt.getTime();
+                const timeRemaining = expiresAt.getTime() - now.getTime();
+                const percentRemaining = (timeRemaining / sessionLifeTime) * 100;
+
+                if (percentRemaining < 20) {
+                    res.setHeader('X-Session-Refresh', 'true');
+                    res.setHeader('X-Session-Expires-At', expiresAt.toISOString());
+                    res.setHeader('X-Time-Remaining', timeRemaining.toString());
+
+                    console.log("Session Expiring Soon!!");
+                }
+
+                if (user.status === UserStatus.BLOCKED || user.status === UserStatus.DELETED) {
+                    throw new AppError(401, 'Unauthorized access! User is not active.');
+                }
+
+                if (user.isDeleted) {
+                    throw new AppError(401, 'Unauthorized access! User is deleted.');
+                }
+
+                if (authRoles.length > 0 && !authRoles.includes(user.role)) {
+                    throw new AppError(403, 'Forbidden access! You do not have permission to access this resource.');
+                }
+
+                req.user = {
+                    userId : user.id,
+                    role : user.role,
+                    email : user.email,
+                }
+            }
+
+            const accessToken = cookieUtils.getCookie(req, 'accessToken');
+
+            if (!accessToken) {
+                throw new AppError(401, 'Unauthorized access! No access token provided.');
+            }
+
+
         }
 
-        if (user.isDeleted) {
-          throw new AppError(403, "Forbidden: Your account is deleted. Please contact support for assistance.");
+        //Access Token Verification
+        const accessToken = cookieUtils.getCookie(req, 'accessToken');
+
+        if (!accessToken) {
+            throw new AppError(401, 'Unauthorized access! No access token provided.');
         }
 
-        if (authRoles.length > 0 && !authRoles.includes(user.role)) {
-          throw new AppError(403, "Forbidden: You do not have permission to access this resource");
+        const verifiedToken = jwtUtils.verifyToken(accessToken, envVars.ACCESS_TOKEN_SECRET);
+
+        if (!verifiedToken.success) {
+            throw new AppError(401, 'Unauthorized access! Invalid access token.');
         }
 
+        if (authRoles.length > 0 && typeof verifiedToken.data === 'object' && !authRoles.includes(verifiedToken.data.role as Role)) {
+            throw new AppError(403, 'Forbidden access! You do not have permission to access this resource.');
+        }
 
-
-      }
-
-      const accessToken = cookieUtils.getCookie(req, 'accessToken');
-
-      if (!accessToken) {
-        throw new AppError(401, 'Unauthorized access! No access token provided.');
-      }
+        next()
+    } catch (error: any) {
+        next(error);
     }
-
-    const accessToken = cookieUtils.getCookie(req, 'accessToken');
-
-    if (!accessToken) {
-      throw new AppError(401, 'Unauthorized access! No access token provided.');
-    }
-
-    const verifiedToken = jwtUtils.verifyToken(accessToken, envVars.ACCESS_TOKEN_SECRET);
-
-    if (!verifiedToken.success) {
-      throw new AppError(401, 'Unauthorized access! Invalid access token.');
-    }
-
-    if (authRoles.length > 0 && typeof verifiedToken.data === 'object' && !authRoles.includes(verifiedToken.data!.role as Role)) {
-      throw new AppError(403, 'Forbidden access! You do not have permission to access this resource.');
-    }
-
-    next();
-  } catch (error: any) {
-    next(error);
-  }
 };

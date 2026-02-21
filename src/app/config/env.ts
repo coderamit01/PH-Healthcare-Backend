@@ -11,6 +11,8 @@ interface EnvConfig {
   ACCESS_TOKEN_SECRET: string
   ACCESS_TOKEN_EXPIRES_IN: string
   REFRESH_TOKEN_EXPIRES_IN: string
+  JWT_REFRESH_SECRET: string
+  JWT_REFRESH_EXPIRES_IN: string
 }
 
 const envVariables = (): EnvConfig => {
@@ -22,7 +24,9 @@ const envVariables = (): EnvConfig => {
     'NODE_ENV',
     'ACCESS_TOKEN_SECRET',
     'ACCESS_TOKEN_EXPIRES_IN',
-    'REFRESH_TOKEN_EXPIRES_IN'
+    'REFRESH_TOKEN_EXPIRES_IN',
+    'JWT_REFRESH_SECRET',
+    'JWT_REFRESH_EXPIRES_IN'
   ]
 
   requiredEnvVariales.forEach( (variable) => {
@@ -39,7 +43,9 @@ const envVariables = (): EnvConfig => {
     NODE_ENV: process.env.NODE_ENV as string,
     ACCESS_TOKEN_SECRET: process.env.ACCESS_TOKEN_SECRET as string,
     ACCESS_TOKEN_EXPIRES_IN: process.env.ACCESS_TOKEN_EXPIRES_IN as string,
-    REFRESH_TOKEN_EXPIRES_IN: process.env.REFRESH_TOKEN_EXPIRES_IN as string
+    REFRESH_TOKEN_EXPIRES_IN: process.env.REFRESH_TOKEN_EXPIRES_IN as string,
+    JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET as string,
+    JWT_REFRESH_EXPIRES_IN: process.env.JWT_REFRESH_EXPIRES_IN as string,
     
   }
 }
