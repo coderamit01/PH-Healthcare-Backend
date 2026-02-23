@@ -275,7 +275,7 @@ const logoutUser = async (sessionToken: string) => {
 };
 
 const verifyEmail = async (email: string, otp: string) => {
-  const result = await auth.api.verifyEmail({
+  const result = await auth.api.verifyEmailOTP({
     body: {
       email,
       otp,
@@ -293,6 +293,71 @@ const verifyEmail = async (email: string, otp: string) => {
   }
 };
 
+const forgotPassword = async (email: string) => {
+  const isUserExists = await prisma.user.findUnique({
+    where: {
+      email
+    },
+  });
+  if (!isUserExists) {
+    throw new AppError(404, "User not found");
+  }
+  if (!isUserExists.emailVerified) {
+    throw new AppError(400, "Email is not verified");
+  }
+  if (isUserExists.isDeleted || isUserExists.status === UserStatus.DELETED) {
+    throw new AppError(400, "User is deleted or blocked");
+  }
+
+  await auth.api.requestPasswordResetEmailOTP({
+    body: {
+      email
+    }
+  })
+}
+
+
+const resetPassword = async (email: string, otp: string, newPassword: string) => {
+  const isUserExists = await prisma.user.findUnique({
+    where: {
+      email
+    },
+  });
+  if (!isUserExists) {
+    throw new AppError(404, "User not found");
+  }
+  if (!isUserExists.emailVerified) {
+    throw new AppError(400, "Email is not verified");
+  }
+  if (isUserExists.isDeleted || isUserExists.status === UserStatus.DELETED) {
+    throw new AppError(400, "User is deleted or blocked");
+  }
+
+  await auth.api.resetPasswordEmailOTP({
+    body: {
+      email,
+      otp,
+      password: newPassword
+    }
+  })
+  if (isUserExists.needPasswordChange) {
+    await prisma.user.update({
+      where: {
+        id: isUserExists.id,
+      },
+      data: {
+        needPasswordChange: false,
+      }
+    })
+  }
+  await prisma.session.deleteMany({
+    where: {userId: isUserExists.id}
+  })
+}
+
+
+
+
 export const AuthService = {
   registerpatient,
   loginUser,
@@ -301,4 +366,6 @@ export const AuthService = {
   changePassword,
   logoutUser,
   verifyEmail,
+  forgotPassword,
+  resetPassword,
 };
