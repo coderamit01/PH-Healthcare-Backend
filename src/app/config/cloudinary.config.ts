@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { v2 as cloudinary, UploadApiResponse } from "cloudinary";
 import { envVars } from "./env";
 import { AppError } from "../errorhelpers/AppError";
@@ -34,6 +36,25 @@ export const uploadFileToCloudinary = async (buffer: Buffer, fileName: string): 
       }
     ).end(buffer);
   })
+}
+
+
+export const deleteFileFromCloudinary = async(url:string) => {
+  try {
+    const regex = /\/v\d+\/(.+?)(?:\.[a-zA-Z0-9]+)+$/;
+    const match = url.match(regex);
+    if(match && match[1]){
+      const public_id = match[1];
+      await cloudinary.uploader.destroy(
+        public_id,
+        {
+          resource_type: "image"
+        }
+      )
+    }
+  } catch (error: any) {
+      throw new AppError(500, "Failed to delete file from Cloudinary");
+  }
 }
 
 

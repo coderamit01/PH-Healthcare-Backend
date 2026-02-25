@@ -1,12 +1,26 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextFunction, Request, Response } from "express";
+import { deleteFileFromCloudinary } from "../config/cloudinary.config";
 
-export const globalErrorHandler = (
+export const globalErrorHandler = async (
   err: any,
   req: Request,
   res: Response,
   _next: NextFunction,
 ) => {
+
+
+  if (req.file) {
+    await deleteFileFromCloudinary(req.file?.path);
+  }
+
+  if((req.files && Array.isArray(req.files)) && req.files.length > 0 ) {
+    const imageUrls = req.files.map(file => file.path);
+    await Promise.all(imageUrls.map(url => deleteFileFromCloudinary(url)))
+  }
+
+
   const statusCode: number = err.statusCode ?? 500;
   const message: string = err.message || "Something went wrong";
 
