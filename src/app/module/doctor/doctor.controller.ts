@@ -2,9 +2,13 @@ import { Request, Response } from "express";
 import { catchAsync } from "../../shared/catchAsync";
 import { DoctorService } from "./doctor.service";
 import { sendResponse } from "../../shared/sendResponse";
+import { IQueryParams } from "../../interface/query.interface";
 
 const getAllDoctors = catchAsync(async (req:Request, res:Response) => {
-  const result = await DoctorService.getAllDoctors();
+
+  const query = req.query
+
+  const result = await DoctorService.getAllDoctors(query as IQueryParams);
 
   sendResponse(res, {
     statusCode: 200,
