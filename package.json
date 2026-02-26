@@ -6,6 +6,7 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsx watch src/server.ts",
+    "seed:super-admin": "tsx src/app/utils/seed.ts",
     "lint": "eslint ./src/**/*",
     "migrate": "prisma migrate dev",
     "generate": "prisma generate",
@@ -27,6 +28,7 @@
     "cloudinary": "^1.41.3",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
+    "date-fns": "^4.1.0",
     "dotenv": "^17.3.1",
     "ejs": "^4.0.1",
     "express": "^5.2.1",
@@ -36,6 +38,7 @@
     "nodemailer": "^8.0.1",
     "pg": "^8.18.0",
     "tsx": "^4.21.0",
+    "uuid": "^13.0.0",
     "zod": "^4.3.6"
   },
   "devDependencies": {

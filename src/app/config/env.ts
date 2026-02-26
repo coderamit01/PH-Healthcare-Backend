@@ -25,7 +25,9 @@ interface EnvConfig {
     CLOUD_NAME: string,
     API_KEY: string,
     API_SECRET: string
-  }
+  },
+  SUPER_ADMIN_EMAIL: string,
+  SUPER_ADMIN_PASSWORD: string
 }
 
 const envVariables = (): EnvConfig => {
@@ -48,7 +50,9 @@ const envVariables = (): EnvConfig => {
     'EMAIL_SENDER_SMTP_FROM',
     'CLOUDINARY_CLOUD_NAME',
     'CLOUDINARY_API_KEY',
-    'CLOUDINARY_API_SECRET'
+    'CLOUDINARY_API_SECRET',
+    'SUPER_ADMIN_EMAIL',
+    'SUPER_ADMIN_PASSWORD'
 
   ]
 
@@ -81,7 +85,9 @@ const envVariables = (): EnvConfig => {
       CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME as string,
       API_KEY: process.env.CLOUDINARY_API_KEY as string,
       API_SECRET: process.env.CLOUDINARY_API_SECRET as string,
-    }
+    },
+    SUPER_ADMIN_EMAIL: process.env.SUPER_ADMIN_EMAIL as string,
+    SUPER_ADMIN_PASSWORD: process.env.SUPER_ADMIN_PASSWORD as string
 
   }
 }
