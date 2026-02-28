@@ -1,66 +1,73 @@
-import dotenv from 'dotenv'
+import dotenv from "dotenv";
 
 dotenv.config();
 
 interface EnvConfig {
-  PORT: string
-  DATABASE_URL: string
-  FRONTEND_URL: string,
-  BETTER_AUTH_SECRET: string
-  BETTER_AUTH_URL: string
-  NODE_ENV: string
-  ACCESS_TOKEN_SECRET: string
-  ACCESS_TOKEN_EXPIRES_IN: string
-  REFRESH_TOKEN_EXPIRES_IN: string
-  JWT_REFRESH_SECRET: string
-  JWT_REFRESH_EXPIRES_IN: string,
+  PORT: string;
+  DATABASE_URL: string;
+  FRONTEND_URL: string;
+  BETTER_AUTH_SECRET: string;
+  BETTER_AUTH_URL: string;
+  NODE_ENV: string;
+  ACCESS_TOKEN_SECRET: string;
+  ACCESS_TOKEN_EXPIRES_IN: string;
+  REFRESH_TOKEN_EXPIRES_IN: string;
+  JWT_REFRESH_SECRET: string;
+  JWT_REFRESH_EXPIRES_IN: string;
   EMAIL_SENDER: {
-    SMTP_FROM: string,
-    SMTP_HOST: string,
-    SMTP_PORT: string,
-    SMTP_USER: string,
-    SMTP_PASS: string
-  }
-  CLOUDINARY:{
-    CLOUD_NAME: string,
-    API_KEY: string,
-    API_SECRET: string
-  },
-  SUPER_ADMIN_EMAIL: string,
-  SUPER_ADMIN_PASSWORD: string
+    SMTP_FROM: string;
+    SMTP_HOST: string;
+    SMTP_PORT: string;
+    SMTP_USER: string;
+    SMTP_PASS: string;
+  };
+  CLOUDINARY: {
+    CLOUD_NAME: string;
+    API_KEY: string;
+    API_SECRET: string;
+  };
+  SUPER_ADMIN_EMAIL: string;
+  SUPER_ADMIN_PASSWORD: string;
+  STRIPE: {
+    STRIPE_SECRET_KEY: string;
+    STRIPE_WEBHOOK_SECRET: string;
+  };
 }
 
 const envVariables = (): EnvConfig => {
   const requiredEnvVariales = [
-    'PORT',
-    'DATABASE_URL',
-    'FRONTEND_URL',
-    'BETTER_AUTH_SECRET',
-    'BETTER_AUTH_URL',
-    'NODE_ENV',
-    'ACCESS_TOKEN_SECRET',
-    'ACCESS_TOKEN_EXPIRES_IN',
-    'REFRESH_TOKEN_EXPIRES_IN',
-    'JWT_REFRESH_SECRET',
-    'JWT_REFRESH_EXPIRES_IN',
-    'EMAIL_SENDER_SMTP_HOST',
-    'EMAIL_SENDER_SMTP_PORT',
-    'EMAIL_SENDER_SMTP_USER',
-    'EMAIL_SENDER_SMTP_PASS',
-    'EMAIL_SENDER_SMTP_FROM',
-    'CLOUDINARY_CLOUD_NAME',
-    'CLOUDINARY_API_KEY',
-    'CLOUDINARY_API_SECRET',
-    'SUPER_ADMIN_EMAIL',
-    'SUPER_ADMIN_PASSWORD'
-
-  ]
+    "PORT",
+    "DATABASE_URL",
+    "FRONTEND_URL",
+    "BETTER_AUTH_SECRET",
+    "BETTER_AUTH_URL",
+    "NODE_ENV",
+    "ACCESS_TOKEN_SECRET",
+    "ACCESS_TOKEN_EXPIRES_IN",
+    "REFRESH_TOKEN_EXPIRES_IN",
+    "JWT_REFRESH_SECRET",
+    "JWT_REFRESH_EXPIRES_IN",
+    "EMAIL_SENDER_SMTP_HOST",
+    "EMAIL_SENDER_SMTP_PORT",
+    "EMAIL_SENDER_SMTP_USER",
+    "EMAIL_SENDER_SMTP_PASS",
+    "EMAIL_SENDER_SMTP_FROM",
+    "CLOUDINARY_CLOUD_NAME",
+    "CLOUDINARY_API_KEY",
+    "CLOUDINARY_API_SECRET",
+    "SUPER_ADMIN_EMAIL",
+    "SUPER_ADMIN_PASSWORD",
+    "STRIPE_SECRET_KEY",
+    "STRIPE_WEBHOOK_SECRET",
+  ];
 
   requiredEnvVariales.forEach((variable) => {
     if (!process.env[variable]) {
-      throw new Error(`Environment variable ${variable} is required but not defined in .env file.`)
+      throw new Error(
+        `Environment variable ${variable} is required but not defined in .env file.`,
+      );
     }
-  })
+  });
 
   return {
     PORT: process.env.PORT as string,
@@ -87,9 +94,12 @@ const envVariables = (): EnvConfig => {
       API_SECRET: process.env.CLOUDINARY_API_SECRET as string,
     },
     SUPER_ADMIN_EMAIL: process.env.SUPER_ADMIN_EMAIL as string,
-    SUPER_ADMIN_PASSWORD: process.env.SUPER_ADMIN_PASSWORD as string
-
-  }
-}
+    SUPER_ADMIN_PASSWORD: process.env.SUPER_ADMIN_PASSWORD as string,
+    STRIPE: {
+      STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY as string,
+      STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET as string,
+    },
+  };
+};
 
 export const envVars = envVariables();

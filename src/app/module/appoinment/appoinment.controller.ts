@@ -1,38 +1,110 @@
 import { Request, Response } from "express";
 import { catchAsync } from "../../shared/catchAsync";
+import { sendResponse } from "../../shared/sendResponse";
+import { AppointmentService } from "./appoinment.service";
 
 const bookAppointment = catchAsync(async (req: Request, res: Response) => {
-  // Implementation for booking an appointment
+  const payload = req.body;
+  const user = req.user;
+  const appointment = await AppointmentService.bookAppointment(payload, user);
+  sendResponse(res, {
+    statusCode: 201,
+    success: true,
+    message: "Appointment booked successfully",
+    data: appointment,
+  });
 });
 
 const getMyAppointments = catchAsync(async (req: Request, res: Response) => {
-  // Implementation for getting user's appointments
+  const user = req.user;
+  const appointments = await AppointmentService.getMyAppointments(user);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Appointments retrieved successfully",
+    data: appointments,
+  });
 });
 
 const changeAppointmentStatus = catchAsync(
   async (req: Request, res: Response) => {
-    // Implementation for changing appointment status
+    const appointmentId = req.params.id;
+    const payload = req.body;
+    const user = req.user;
+
+    const updatedAppointment = await AppointmentService.changeAppointmentStatus(
+      appointmentId as string,
+      payload,
+      user,
+    );
+    sendResponse(res, {
+      statusCode: 200,
+      success: true,
+      message: "Appointment status updated successfully",
+      data: updatedAppointment,
+    });
   },
 );
 
 const getMySingleAppointment = catchAsync(
   async (req: Request, res: Response) => {
-    // Implementation for getting a single appointment
+    const appointmentId = req.params.id;
+    const user = req.user;
+
+    const appointment = await AppointmentService.getMySingleAppointment(
+      appointmentId as string,
+      user,
+    );
+    sendResponse(res, {
+      statusCode: 200,
+      success: true,
+      message: "Appointment retrieved successfully",
+      data: appointment,
+    });
   },
 );
 
 const getAllAppointments = catchAsync(async (req: Request, res: Response) => {
-  // Implementation for getting all appointments
+  const appointments = await AppointmentService.getAllAppointments();
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "All appointments retrieved successfully",
+    data: appointments,
+  });
 });
 
 const bookAppointmentWithPayLater = catchAsync(
   async (req: Request, res: Response) => {
-    // Implementation for booking an appointment with pay later option
+    const payload = req.body;
+    const user = req.user;
+    const appointment = await AppointmentService.bookAppointmentWithPayLater(
+      payload,
+      user,
+    );
+    sendResponse(res, {
+      statusCode: 201,
+      success: true,
+      message: "Appointment booked successfully with Pay Later option",
+      data: appointment,
+    });
   },
 );
 
 const initiatePayment = catchAsync(async (req: Request, res: Response) => {
-  // Implementation for initiating payment for an appointment
+  const appointmentId = req.params.id;
+  const user = req.user;
+  const paymentInfo = await AppointmentService.initiatePayment(
+    appointmentId as string,
+    user,
+  );
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Payment initiated successfully",
+    data: paymentInfo,
+  });
 });
 
 export const AppointmentController = {
