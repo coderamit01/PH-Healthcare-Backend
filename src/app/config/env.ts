@@ -32,6 +32,11 @@ interface EnvConfig {
     STRIPE_SECRET_KEY: string;
     STRIPE_WEBHOOK_SECRET: string;
   };
+  RAG: {
+    API_KEY: string;
+    EMBEDDING_MODEL: string;
+    LLM_MODEL: string;
+  }
 }
 
 const envVariables = (): EnvConfig => {
@@ -59,6 +64,9 @@ const envVariables = (): EnvConfig => {
     "SUPER_ADMIN_PASSWORD",
     "STRIPE_SECRET_KEY",
     "STRIPE_WEBHOOK_SECRET",
+    "API_KEY",
+    "EMBEDDING_MODEL",
+    "LLM_MODEL",
   ];
 
   requiredEnvVariales.forEach((variable) => {
@@ -99,6 +107,11 @@ const envVariables = (): EnvConfig => {
       STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY as string,
       STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET as string,
     },
+    RAG: {
+      API_KEY: process.env.OPEN_ROUTER_API_KEY as string,
+      EMBEDDING_MODEL: process.env.OPEN_ROUTER_EMBEDDING_MODEL as string,
+      LLM_MODEL: process.env.OPEN_ROUTER_LLM_MODEL as string
+    }
   };
 };
 

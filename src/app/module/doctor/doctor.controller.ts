@@ -4,7 +4,7 @@ import { DoctorService } from "./doctor.service";
 import { sendResponse } from "../../shared/sendResponse";
 import { IQueryParams } from "../../interface/query.interface";
 
-const getAllDoctors = catchAsync(async (req:Request, res:Response) => {
+const getAllDoctors = catchAsync(async (req: Request, res: Response) => {
 
   const query = req.query
 
@@ -14,8 +14,9 @@ const getAllDoctors = catchAsync(async (req:Request, res:Response) => {
     statusCode: 200,
     success: true,
     message: "Doctors retrieved successfully",
-    data: result
-  }); 
+    data: result.data,
+    meta: result.meta
+  });
 })
 const getDoctorById = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
@@ -55,8 +56,8 @@ const deleteDoctor = catchAsync(async (req: Request, res: Response) => {
 })
 
 export const DoctorController = {
-    getAllDoctors,
-    getDoctorById,
-    updateDoctor,
-    deleteDoctor
+  getAllDoctors,
+  getDoctorById,
+  updateDoctor,
+  deleteDoctor
 }
